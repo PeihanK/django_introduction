@@ -7,6 +7,11 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        db_table = 'task_manager_category'
+        verbose_name = 'Category'
+        unique_together = ['name']
+
 
 class Task(models.Model):
     STATUS_CHOICES = [
@@ -16,8 +21,8 @@ class Task(models.Model):
         ('blocked', 'Blocked'),
         ('done', 'Done'),
     ]
-    title = models.CharField(max_length=255)
-    description = models.TextField()
+    title = models.CharField(help_text='Task name', max_length=255)
+    description = models.TextField(help_text='Task description', null=True, blank=True)
     categories = models.ManyToManyField(Category, related_name='tasks')
     status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='new')
     deadline = models.DateTimeField()
@@ -25,6 +30,12 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        db_table = 'task_manager_task'
+        ordering = ['-created_at']
+        verbose_name = 'Task'
+        unique_together = ['title']
 
 
 class SubTask(models.Model):
@@ -45,4 +56,8 @@ class SubTask(models.Model):
     def __str__(self):
         return self.title
 
-
+    class Meta:
+        db_table = 'task_manager_subtask'
+        ordering = ['-created_at']
+        verbose_name = 'SubTask'
+        unique_together = ['title']
