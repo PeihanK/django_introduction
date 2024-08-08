@@ -9,7 +9,10 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from django.db import models
+from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
+# from django.contrib.auth.models import User
 from pathlib import Path
 from environ import Env
 
@@ -37,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'library.apps.LibraryConfig',
+    'first_app.apps.FirstAppConfig',
+    'practicum_two.apps.PracticumTwoConfig',
 ]
 
 MIDDLEWARE = [
