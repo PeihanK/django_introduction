@@ -1,0 +1,69 @@
+# запуск shell
+python manage.py shell
+
+(InteractiveConsole)
+# импорты
+>>> from datetime import timedelta
+>>> from django.utils import timezone
+>>> from first_app.models import Task, SubTask
+# создание записей:
+>>> task = Task.objects.create(
+...     title="Prepare presentation",
+...     description="Prepare materials and slides for the presentation",
+...     status="new",
+...     deadline=timezone.now() + timedelta(days=3)
+... )
+
+>>> subtask1 = SubTask.objects.create(
+...     title="Gather information",
+...     description="Find necessary information for the presentation",
+...     status="new",
+...     deadline=timezone.now() + timedelta(days=2),
+...     task=task
+... )
+
+>>> subtask2 = SubTask.objects.create(
+...     title="Create slides",
+...     description="Create presentation slides",
+...     status="new",
+...     deadline=timezone.now() + timedelta(days=1),
+...     task=task
+... )
+# Чтение записей:
+# Tasks со статусом "New":
+>>> new_tasks = Task.objects.filter(status="new")
+>>> for task in new_tasks:
+...     print(task.title, task.status, task.deadline)
+...
+Prepare presentation new 2024-08-12 16:35:35.115203+00:00
+Mallorka new 2024-08-21 12:00:00+00:00
+>>>
+# SubTasks с просроченным статусом "Done":
+>>> expired_done_tasks = SubTask.objects.filter(status="done", deadline__lt=timezone.now())
+>>> for subtask in expired_done_tasks:
+...     print(subtask.title, subtask.status, subtask.deadline)
+...
+Wash a car done 2024-08-08 18:14:50+00:00
+
+# Изменение записей:
+
+# Измените статус "Prepare presentation" на "In progress".
+>>> task = Task.objects.get(title="Prepare presentation")
+>>> task.status = "in_progress"
+>>> task.save()
+>>>
+# Измените срок выполнения для "Gather information" на два дня назад.
+>>> subtask1 = SubTask.objects.get(title="Gather information")
+>>> subtask1.deadline = timezone.now() - timedelta(days=2)
+>>> subtask1.save()
+
+# Измените описание для "Create slides" на "Create and format presentation slides".
+>>> subtask2 = SubTask.objects.get(title="Create slides")
+>>> subtask2.description = "Create and format presentation slides"
+>>> subtask2.save()
+# Удаление записей:
+# Удалите задачу "Prepare presentation" и все ее подзадачи.
+>>> task = Task.objects.get(title="Prepare presentation")
+>>> task.delete()
+(3, {'first_app.SubTask': 2, 'first_app.Task': 1})
+>>>
