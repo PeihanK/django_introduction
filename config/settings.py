@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'library.apps.LibraryConfig',
     'first_app.apps.FirstAppConfig',
     'practicum_two.apps.PracticumTwoConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +73,13 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+}
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
