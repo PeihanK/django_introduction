@@ -40,7 +40,7 @@ class TaskDetailSerializer(serializers.ModelSerializer):
 class CategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name']
+        fields = '__all__'
 
         def create(self, validated_data):
             name = validated_data.pop('name')
