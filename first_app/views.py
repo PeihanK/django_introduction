@@ -16,6 +16,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Task, SubTask, Category
+from .permissions import IsOwner
 from .serializers import TaskSerializer, SubTaskCreateSerializer, CategoryCreateSerializer
 
 
@@ -73,13 +74,22 @@ class TaskList(generics.ListCreateAPIView):
     filterset_fields = ['status', 'deadline']
     search_fields = ['title', 'description']
     ordering_fields = 'created_at'
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        return Task.objects.filter(owner=self.request.user)
 
 
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return Task.objects.filter(owner=self.request.user)
 
 
 class SubTaskList(generics.ListCreateAPIView):
@@ -90,13 +100,22 @@ class SubTaskList(generics.ListCreateAPIView):
     filterset_fields = ['status', 'deadline']
     search_fields = ['title', 'description']
     ordering_fields = 'created_at'
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        return SubTask.objects.filter(owner=self.request.user)
 
 
 class SubTaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubTask.objects.all()
     serializer_class = SubTaskCreateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    def get_queryset(self):
+        return SubTask.objects.filter(owner=self.request.user)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

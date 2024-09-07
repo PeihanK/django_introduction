@@ -18,7 +18,8 @@ class TaskCreateSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['id', 'title', 'description', 'status', 'deadline']
+        fields = ['id', 'title', 'description', 'status', 'deadline', 'owner', 'categories']
+        read_only_fields = ['created_at', 'owner']
 
 
 class SubTaskCreateSerializer(serializers.ModelSerializer):
@@ -26,7 +27,7 @@ class SubTaskCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubTask
-        fields = ['id', 'title', 'task', 'description', 'deadline', 'created_at']
+        fields = ['id', 'title', 'task', 'description', 'deadline', 'created_at', 'owner']
 
 
 class TaskDetailSerializer(serializers.ModelSerializer):
@@ -34,7 +35,8 @@ class TaskDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ['id', 'title', 'description', 'status', 'deadline', 'created_at', 'subtasks']
+        fields = ['id', 'title', 'description', 'status', 'deadline', 'created_at', 'owner', 'subtasks']
+        read_only_fields = ['created_at', 'owner']
 
 
 class CategoryCreateSerializer(serializers.ModelSerializer):
